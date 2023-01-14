@@ -21,7 +21,7 @@ Private ChatGPT Desktop Webview app made with QtWebView.
 
 5.Supports back button.
 
-Compiled as a windows executable only using pyinstaller check `releases`.
+Compiled as a windows executable only using pyinstaller check `releases` or self compile.
 
 ## Contributing
 
