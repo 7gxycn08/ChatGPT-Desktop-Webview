@@ -7,7 +7,7 @@ Private ChatGPT Desktop Webview app made with QtWebView.
 ## Features
 
 
-1.Private doesn't make any connections to Google, Mozilla, or Microsoft, Brave etc...
+1.Private doesn't make any connections to Google, Mozilla, or Microsoft, Brave unless you login via Google etc..
 
 
 2.Light Weight.
