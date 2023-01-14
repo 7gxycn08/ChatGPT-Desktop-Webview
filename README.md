@@ -1,5 +1,5 @@
 # ChatGPT-Desktop-Webview
-Private ChatGPT Desktop Webview app made with QtWebView.
+Is a Private ChatGPT Desktop Webview app made with QtWebView.
 
 
 ![ChatGPT](https://user-images.githubusercontent.com/121936658/212458105-9bbd11f5-9fad-4488-a3ba-dcfbb16d78b3.png)
