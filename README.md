@@ -7,19 +7,19 @@ Is a Private ChatGPT Desktop Webview app made with QtWebView.
 ## Features
 
 
-1.Private doesn't make any connections to Google, Mozilla, or Microsoft, Brave unless you login via Google etc..
+1. Private doesn't make any connections to Google, Mozilla, or Microsoft, Brave unless you login via Google etc..
 
 
-2.Light Weight.
+2. Light Weight.
 
 
-3.Page reloading can be done using a simple `Right-click Reload` if ChatGPT gets stuck/errors out.
+3. Page reloading can be done using a simple `Right-click Reload` if ChatGPT gets stuck/errors out.
 
 
-4.Zoom in or out to configure text size.
+4. Zoom in or out to configure text size.
 
 
-5.Supports back button.
+5. Supports back button.
 
 Compiled as a windows executable only using pyinstaller check `releases` or self compile.
 
