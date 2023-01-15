@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QUrl
-from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from time import sleep
 from sys import argv, exit
@@ -26,6 +26,9 @@ class ChatGPT_Main(QMainWindow):
         self.setWindowIcon(QIcon('Resources\\icon.ico'))
         self.setWindowTitle('ChatGPT Desktop Webview v1.0.0.1')
         self.webview = QWebEngineView()
+        self.settings = QWebEngineSettings.globalSettings()
+        self.settings.setAttribute(QWebEngineSettings.WebAttribute.JavascriptCanAccessClipboard,True) #Fixes the copy button not working issue.
+        self.webpage = self.webview.page()
         self.setCentralWidget(self.webview)
         self.webview.setGeometry(1200,500,1200,1000)
         self.webview.setZoomFactor(1.6)
@@ -37,4 +40,4 @@ class ChatGPT_Main(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(argv)
     run = ChatGPT_Main()
-    exit(app.exec_())
+    exit(app.exec())
