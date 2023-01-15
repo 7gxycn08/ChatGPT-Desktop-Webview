@@ -1,0 +1,12 @@
+Version: 1.0.0.2
+CompanyName: 7gxycn08@github.com
+FileDescription: ChatGPT Desktop Webview.
+InternalName: ChatGPT Desktop Webview
+LegalCopyright: © 7gxycn08@github.com. All rights reserved.
+OriginalFilename: ChatGPT
+ProductName: ChatGPT Desktop Webview
+Translation:
+  - langID: 0
+    charsetID: 1200
+  - langID: 1033
+    charsetID: 1252

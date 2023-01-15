@@ -24,7 +24,7 @@ class ChatGPT_Main(QMainWindow):
         super().__init__()
         self.setGeometry(1200,500,1200,1000)
         self.setWindowIcon(QIcon('Resources\\icon.ico'))
-        self.setWindowTitle('ChatGPT Desktop Webview v1.0.0.1')
+        self.setWindowTitle('ChatGPT Desktop Webview v1.0.0.2')
         self.webview = QWebEngineView()
         self.settings = QWebEngineSettings.globalSettings()
         self.settings.setAttribute(QWebEngineSettings.WebAttribute.JavascriptCanAccessClipboard,True) #Fixes the copy button not working issue.
