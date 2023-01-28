@@ -2,10 +2,7 @@
 Is a Private ChatGPT Desktop Webview app made with QtWebView.
 
 
-
-
-https://user-images.githubusercontent.com/121936658/215249000-eda4520b-58c5-4c4a-83b5-4201bff28819.mp4
-
+https://user-images.githubusercontent.com/121936658/215249060-a71046ec-cf03-4da3-bb7e-920a437ff1a5.mp4
 
 
 
