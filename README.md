@@ -26,12 +26,9 @@ Is a Private ChatGPT Desktop Webview app made with QtWebView.
 
 
 ## Latest changes:
-- **Added cut/copy/paste from right-click In context menu.**
-- **Added GPT-4 support.**
-- **Added GPT plugins support.**
-- **Added custom GPT creation support.**
-- **Added support for popup pages.**
-- **Added Inno Installer for easy installation.**
+- **Enabled Accelerated2dCanvas.**
+- **Enabled WebGL.**
+- **Switched to PySide6.**
 
 
 ## Contributing
