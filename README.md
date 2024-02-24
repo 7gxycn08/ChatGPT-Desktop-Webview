@@ -6,7 +6,7 @@ Is a Private ChatGPT Desktop Webview app made with QtWebView.
 1. **Private doesn't make any connections to Google, Mozilla, or Microsoft, Brave unless you login via Google etc..**
 
 
-2. **Cookie files are encrypted.**
+2. **Cookies are encrypted.**
 
 
 3. **Light Weight.**
