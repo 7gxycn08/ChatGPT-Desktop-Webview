@@ -26,8 +26,8 @@ Is a Private ChatGPT Desktop Webview app made with QtWebView.
 
 
 ## Latest changes:
-- **Enabled Accelerated2dCanvas.**
-- **Enabled WebGL.**
+- **Added Accelerated2dCanvas support.**
+- **Added WebGL support.**
 - **Switched to PySide6.**
 
 
