@@ -21,10 +21,10 @@ Is a Private ChatGPT Desktop Webview app made with QtWebView.
 6. **Supports `back/reload/cut/copy/paste` from right-click context menu.**
 
 
-7. **Supports `ChatGPT Plugins`.
+7. **Supports `ChatGPT Plugins`.**
 
 
-8. **Supports `File Uploading`.
+8. **Supports `File Uploading`.**
 
 
 ![1 0 0 6](https://github.com/7gxycn08/ChatGPT-Desktop-Webview/assets/121936658/3e0f321f-c454-4560-bc6c-9df3a1017c61)
