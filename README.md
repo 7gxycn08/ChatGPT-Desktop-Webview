@@ -32,9 +32,11 @@ Is a Private ChatGPT Desktop Webview app made with QtWebView.
 
 
 ## Latest changes:
-- **Added Accelerated2dCanvas support.**
-- **Added WebGL support.**
-- **Switched to PySide6.**
+- **WebRTC set to public interfaces only to to stop leaking private ip address.**
+- **Disabled ReadingFromCanvas to prevent canvas fingerprinting.**
+- **Enabled scroll animations.**
+- **Enabled Spatial Navigation feature aka (keyboard navigation).**
+- **Updated Python to v3.13.6**
 
 
 ## Contributing
