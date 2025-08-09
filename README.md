@@ -36,6 +36,9 @@ Is a Private ChatGPT Desktop Webview app made with QtWebView.
 - **Enabled scroll animations.**
 - **Enabled Spatial Navigation feature aka (keyboard navigation).**
 - **Updated Python to v3.13.6**
+- **Huge performance improvements.**
+- **Main window will now render and update at refresh rate set by monitor.**
+- **Reduced version number to two values instead of four.**
 
 
 ## Contributing
