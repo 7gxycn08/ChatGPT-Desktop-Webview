@@ -27,8 +27,7 @@ Is a Private ChatGPT Desktop Webview app made with QtWebView.
 8. **Supports `File Uploading`.**
 
 
-![1 0 0 6](https://github.com/7gxycn08/ChatGPT-Desktop-Webview/assets/121936658/3e0f321f-c454-4560-bc6c-9df3a1017c61)
-
+<img width="602" height="550" alt="1 0 0 8" src="https://github.com/user-attachments/assets/02cf8557-8eb3-4481-a10c-2d48d5144a87" />
 
 
 ## Latest changes:
