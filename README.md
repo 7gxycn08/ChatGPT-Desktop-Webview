@@ -32,7 +32,7 @@ Is a Private ChatGPT Desktop Webview app made with QtWebView.
 
 
 ## Latest changes:
-- **WebRTC set to public interfaces only to to stop leaking private ip address.**
+- **WebRTC set to public interfaces only to stop leaking private ip address.**
 - **Disabled ReadingFromCanvas to prevent canvas fingerprinting.**
 - **Enabled scroll animations.**
 - **Enabled Spatial Navigation feature aka (keyboard navigation).**
