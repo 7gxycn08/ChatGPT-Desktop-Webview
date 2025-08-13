@@ -1,9 +1,10 @@
 import os
 from PySide6.QtGui import QIcon, QAction
 from PySide6.QtCore import QUrl, QTimer
-from PySide6.QtWebEngineCore import (QWebEngineSettings, QWebEngineProfile, QWebEnginePage, QWebEngineNotification)
+from PySide6.QtWebEngineCore import (QWebEngineSettings, QWebEngineProfile, QWebEnginePage,
+                                     QWebEngineNotification, QWebEnginePermission)
 from PySide6.QtWebEngineWidgets import QWebEngineView
-from PySide6.QtWidgets import QApplication, QMainWindow, QSystemTrayIcon, QMenu
+from PySide6.QtWidgets import QApplication, QMainWindow, QSystemTrayIcon, QMenu, QFileDialog
 from sys import argv, exit
 from win32api import EnumDisplaySettings
 from win32con import ENUM_CURRENT_SETTINGS
@@ -31,7 +32,7 @@ class CustomWebEnginePage(QWebEnginePage):
         self.new_webview.page().action(self.new_webview.page().WebAction.Copy).setVisible(True)
         self.new_webview.page().action(self.new_webview.page().WebAction.Paste).setVisible(True)
         self.new_webview.setZoomFactor(0.7)
-        self.popup_dialog.setWindowTitle("ChatGPT Desktop Webview v1.2")
+        self.popup_dialog.setWindowTitle("ChatGPT Desktop Webview v1.3")
         self.popup_dialog.setWindowIcon(QIcon('Resources/icon.ico'))
         self.popup_dialog.setCentralWidget(self.new_webview)
         self.popup_dialog.setGeometry(1200, 500, 600, 520)
@@ -98,10 +99,14 @@ class ChatGptMain(CustomMainWindow):
         super().__init__()
         self.setGeometry(1200, 500, 600, 520)
         self.setWindowIcon(QIcon(r'Resources/icon.ico'))
-        self.setWindowTitle('ChatGPT Desktop Webview v1.2')
+        self.setWindowTitle('ChatGPT Desktop Webview v1.3')
         self.profile = QWebEngineProfile('ChatGPTProfile')
         self.profile.setPersistentStoragePath(fr"C:/Users/{os.getlogin()}/AppData/Local/ChatGPT")
+        self.profile.setPushServiceEnabled(True)
         self.profile.setNotificationPresenter(self.handle_notification)
+        self.profile.setHttpUserAgent(
+            "Mozilla/5.0 (Windows NT 10.0;"
+            " Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36")
         self.settings = self.profile.settings()
         self.settings.setAttribute(QWebEngineSettings.WebAttribute.JavascriptCanAccessClipboard, True)
         self.settings.setAttribute(QWebEngineSettings.WebAttribute.JavascriptEnabled, True)
@@ -109,25 +114,31 @@ class ChatGptMain(CustomMainWindow):
         self.settings.setAttribute(QWebEngineSettings.WebAttribute.ReadingFromCanvasEnabled, False)
         self.settings.setAttribute(QWebEngineSettings.WebAttribute.ScrollAnimatorEnabled, True)
         self.settings.setAttribute(QWebEngineSettings.WebAttribute.SpatialNavigationEnabled, True)
+
         self.webview = CustomWebView()
         self.setCentralWidget(self.webview)
         self.webview.setPage(CustomWebEnginePage(self.profile, self.webview))
         self.webview.setGeometry(1200, 500, 600, 520)
         self.webview.setZoomFactor(0.7)
+
         self.url = QUrl("https://chat.openai.com")
         self.webview.load(self.url)
+
         self.webview.page().action(self.webview.page().WebAction.SavePage).setVisible(False)
         self.webview.page().action(self.webview.page().WebAction.ViewSource).setVisible(False)
         self.webview.page().action(self.webview.page().WebAction.Cut).setVisible(True)
         self.webview.page().action(self.webview.page().WebAction.Copy).setVisible(True)
         self.webview.page().action(self.webview.page().WebAction.Paste).setVisible(True)
+        self.webview.page().profile().downloadRequested.connect(self.onDownloadRequested)
+
         self.tray_icon = QSystemTrayIcon()
-        self.tray_icon.setToolTip("ChatGPT Desktop Webview v1.2")
+        self.tray_icon.setToolTip("ChatGPT Desktop Webview v1.3")
         self.tray_icon.setIcon(QIcon("Resources/icon.ico"))
         self.tray_icon.activated.connect(
             lambda reason: self.show() if reason == QSystemTrayIcon.ActivationReason.Trigger else None)
         if self.tray_icon is not None:
             self.tray_icon.hide()
+
         self.tray_menu = QMenu(self)
         self.restore_action = QAction("About", self)
         self.restore_action.triggered.connect(self.about_page)
@@ -140,26 +151,28 @@ class ChatGptMain(CustomMainWindow):
         self.tray_icon.setContextMenu(self.tray_menu)
 
         self.tray_icon.show()
-        self.webview.page().featurePermissionRequested.connect(self.on_feature_permission_requested)
+        self.webview.page().permissionRequested.connect(self.on_permission_requested)
         self.show()
 
     def closeEvent(self, event):
         event.ignore()
         self.hide()
 
-    def on_feature_permission_requested(self, security_origin, feature):
-        if feature == QWebEnginePage.Feature.Notifications:
-            self.webview.page().setFeaturePermission(
-                security_origin,
-                feature,
-                QWebEnginePage.PermissionPolicy.PermissionGrantedByUser
-            )
-        elif feature == QWebEnginePage.Feature.MediaAudioCapture:
-            self.webview.page().setFeaturePermission(
-                security_origin,
-                feature,
-                QWebEnginePage.PermissionPolicy.PermissionGrantedByUser
-            )
+    def onDownloadRequested(self, downloadItem):
+        suggested_name = downloadItem.suggestedFileName()
+        path, _ = QFileDialog.getSaveFileName(self, "Save File As", suggested_name)
+        if path:
+            downloadItem.setPath(path)
+            downloadItem.accept()
+        else:
+            downloadItem.cancel()
+
+    @staticmethod
+    def on_permission_requested(permission: QWebEnginePermission):
+        if permission.permissionType() == QWebEnginePermission.PermissionType.Notifications:
+            permission.grant()
+        elif permission.permissionType() == QWebEnginePermission.PermissionType.MediaAudioCapture:
+            permission.grant()
 
     def handle_notification(self, notification: QWebEngineNotification):
         self.tray_icon.showMessage(
@@ -169,7 +182,8 @@ class ChatGptMain(CustomMainWindow):
             5000  # Duration in milliseconds
         )
 
-    def about_page(self):
+    @staticmethod
+    def about_page():
         url = "https://github.com/7gxycn08/ChatGPT-Desktop-Webview"
         subprocess.Popen(f"start {url}", shell=True, creationflags=subprocess.CREATE_NO_WINDOW)
 
