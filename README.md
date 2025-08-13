@@ -40,6 +40,9 @@ Is a Private ChatGPT Desktop Webview app made with QtWebView.
 - **Huge performance improvements.**
 - **Main window will now render and update at refresh rate set by monitor.**
 - **Reduced version number to two values instead of four.**
+- **Added Chrome/139.0.0.0 User Agent.**
+- **Added Push notifications support.**
+- **Added Tasks support. (Feature not available for free tier accounts)**
 
 
 ## Contributing
