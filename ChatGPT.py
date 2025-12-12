@@ -1,22 +1,13 @@
 import os
 from PySide6.QtGui import QIcon, QAction, Qt
-from PySide6.QtCore import QUrl, QTimer
+from PySide6.QtCore import QUrl
 from PySide6.QtWebEngineCore import (QWebEngineSettings, QWebEngineProfile, QWebEnginePage,
                                      QWebEngineNotification, QWebEnginePermission)
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import QApplication, QMainWindow, QSystemTrayIcon, QMenu, QFileDialog
 from sys import argv, exit
-from win32api import EnumDisplaySettings
-from win32con import ENUM_CURRENT_SETTINGS
 import subprocess
 
-
-def get_refresh_rate():
-    # Get the current display settings
-    settings = EnumDisplaySettings(None, ENUM_CURRENT_SETTINGS)
-
-    # Return the refresh rate (in Hz)
-    return settings.DisplayFrequency
 
 class CustomWebEnginePage(QWebEnginePage):
     def __init__(self, profile, parent=None):
@@ -33,7 +24,7 @@ class CustomWebEnginePage(QWebEnginePage):
         self.new_webview.page().action(self.new_webview.page().WebAction.Copy).setVisible(True)
         self.new_webview.page().action(self.new_webview.page().WebAction.Paste).setVisible(True)
         self.new_webview.setZoomFactor(0.7)
-        self.popup_dialog.setWindowTitle("ChatGPT Desktop Webview v1.3")
+        self.popup_dialog.setWindowTitle("ChatGPT Desktop Webview v1.4")
         self.popup_dialog.setWindowIcon(QIcon('Resources/icon.ico'))
         self.popup_dialog.setCentralWidget(self.new_webview)
         self.popup_dialog.setGeometry(1200, 500, 600, 520)
@@ -41,61 +32,13 @@ class CustomWebEnginePage(QWebEnginePage):
 
         return self.new_webview.page()
 
+
 class CustomWebView(QWebEngineView):
     def __init__(self):
         super().__init__()
 
-        # Set up fixed frame_rate
-        self.fps = get_refresh_rate()  # get refresh rate
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.update_frame)
-        timer_value = 1000 / self.fps
-        self.timer.start(int(timer_value))  # Get and trigger update for consistent latency
-        self.is_dragging = False
 
-    def mousePressEvent(self, event):
-        super().mousePressEvent(event)
-        # Start tracking drag state
-        self.is_dragging = True
-
-    def mouseReleaseEvent(self, event):
-        super().mouseReleaseEvent(event)
-        # Stop tracking drag state
-        self.is_dragging = False
-
-    def update_frame(self):
-        # Only update when not dragging to avoid excessive repaints during window move
-        if not self.is_dragging:
-            self.update()
-
-
-class CustomMainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.fps = get_refresh_rate()
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.update_frame)
-        timer_value = 1000 / self.fps
-        self.timer.start(int(timer_value))  # Trigger every 1/60th of a second
-        self.is_dragging = False
-
-    def mousePressEvent(self, event):
-        super().mousePressEvent(event)
-        # Start tracking drag state
-        self.is_dragging = True
-
-    def mouseReleaseEvent(self, event):
-        super().mouseReleaseEvent(event)
-        # Stop tracking drag state
-        self.is_dragging = False
-
-    def update_frame(self):
-        # Only update when not dragging to avoid excessive repaints during window move
-        if not self.is_dragging:
-            self.update()
-
-
-class ChatGptMain(CustomMainWindow):
+class ChatGptMain(QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -103,16 +46,17 @@ class ChatGptMain(CustomMainWindow):
         self.setWindowFlags(self.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
         self.setGeometry(1200, 500, 600, 520)
         self.setWindowIcon(QIcon(r'Resources/icon.ico'))
-        self.setWindowTitle('ChatGPT Desktop Webview v1.3')
-        
+        self.setWindowTitle('ChatGPT Desktop Webview v1.4')
+
         # -------------------------Specify profile settings-------------------------
         self.profile = QWebEngineProfile('ChatGPTProfile')
         self.profile.setPersistentStoragePath(fr"C:/Users/{os.getlogin()}/AppData/Local/ChatGPT")
         self.profile.setPushServiceEnabled(True)
         self.profile.setNotificationPresenter(self.handle_notification)
+        # noinspection SpellCheckingInspection
         self.profile.setHttpUserAgent(
-            "Mozilla/5.0 (Windows NT 10.0;"
-            " Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36")
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,"
+            " like Gecko) Chrome/143.0.0.0 Safari/537.36")
 
         # -------------------------Settings to use-------------------------
         self.settings = self.profile.settings()
@@ -124,7 +68,7 @@ class ChatGptMain(CustomMainWindow):
         self.settings.setAttribute(QWebEngineSettings.WebAttribute.SpatialNavigationEnabled, True)
 
         # -------------------------Initialize CustomWebView-------------------------
-        self.webview = CustomWebView()
+        self.webview = QWebEngineView()
         self.setCentralWidget(self.webview)
         self.webview.setPage(CustomWebEnginePage(self.profile, self.webview))
         self.webview.setGeometry(1200, 500, 600, 520)
@@ -140,11 +84,11 @@ class ChatGptMain(CustomMainWindow):
         self.webview.page().action(self.webview.page().WebAction.Cut).setVisible(True)
         self.webview.page().action(self.webview.page().WebAction.Copy).setVisible(True)
         self.webview.page().action(self.webview.page().WebAction.Paste).setVisible(True)
-        self.webview.page().profile().downloadRequested.connect(self.onDownloadRequested)
+        self.webview.page().profile().downloadRequested.connect(self.on_download_requested)
 
         # -------------------------Specify tray icon settings and callback-------------------------
         self.tray_icon = QSystemTrayIcon()
-        self.tray_icon.setToolTip("ChatGPT Desktop Webview v1.3")
+        self.tray_icon.setToolTip("ChatGPT Desktop Webview v1.4")
         self.tray_icon.setIcon(QIcon("Resources/icon.ico"))
         self.tray_icon.activated.connect(
             lambda reason: self.show() if reason == QSystemTrayIcon.ActivationReason.Trigger else None)
@@ -174,14 +118,14 @@ class ChatGptMain(CustomMainWindow):
         self.hide()
 
     # -------------------------Open system file dialog when downloading file-------------------------
-    def onDownloadRequested(self, downloadItem):
-        suggested_name = downloadItem.suggestedFileName()
+    def on_download_requested(self, download_item):
+        suggested_name = download_item.suggestedFileName()
         path, _ = QFileDialog.getSaveFileName(self, "Save File As", suggested_name)
         if path:
-            downloadItem.setPath(path)
-            downloadItem.accept()
+            download_item.setPath(path)
+            download_item.accept()
         else:
-            downloadItem.cancel()
+            download_item.cancel()
 
     # -------------------------Allow notification permissions and mic access-------------------------
     @staticmethod
